@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 50%;
+            float: left; /* 使图表容器浮动以并排显示 */
+        }
+        .hello-world {
+            clear: both; /* 清除浮动，确保hello world在下方显示 */
+            text-align: center; /* 居中文本 */
+            padding-top: 20px; /* 添加一些顶部填充 */
+        }
+    </style>
+    <script src="/html/jquery-3.6.0.min.js"></script>
+    <script src="/html/chart.js"></script>
+</head>
+<body>
+    <div class="chart-container">
+        <h3>温度图表</h3>
+        <canvas id="temperatureChart" width="400" height="200"></canvas>
+    </div>
+    <div class="chart-container">
+        <h3>湿度图表</h3>
+        <canvas id="humidityChart" width="400" height="200"></canvas>
+    </div>
+    <div class="hello-world">
+	    <p>目标温度: {{.TT}}</p>
+	    <p>{{.Med}}<p>
+	    <a href="/set">点我设置目标温度</a> <a href="/editor">点我设置时间提醒</a>
+    </div>
+    <script>
+        $(document).ready(function() {
+            let temperatureChart = new Chart(document.getElementById('temperatureChart'), {
+                type: 'line',
+                data: { labels: [], datasets: [{ data: [], label: '温度', borderColor: 'red', fill: false }] }
+            });
+            let humidityChart = new Chart(document.getElementById('humidityChart'), {
+                type: 'line',
+                data: { labels: [], datasets: [{ data: [], label: '湿度', borderColor: 'blue', fill: false }] }
+            });
+            function fetchData() {
+                $.ajax({ url: '/x', success: function(temperature) {
+                    let now = new Date();
+                    temperatureChart.data.labels.push(now.toLocaleTimeString());
+                    temperatureChart.data.datasets[0].data.push(parseFloat(temperature));
+                    temperatureChart.update();
+                }});
+                $.ajax({ url: '/z', success: function(humidity) {
+                    let now = new Date();
+                    humidityChart.data.labels.push(now.toLocaleTimeString());
+                    humidityChart.data.datasets[0].data.push(parseFloat(humidity));
+                    humidityChart.update();
+                }});
+            }
+            setInterval(fetchData, 1000); // 每秒获取数据并更新图表
+        });
+    </script>
+</body>
+</html>

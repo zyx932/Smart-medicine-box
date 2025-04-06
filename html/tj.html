@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间设置</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .editor {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 60%;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            resize: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="editor">
+        <textarea id="text-editor"></textarea>
+        <button onclick="submitText()">提交</button>
+        <button id="helpButton">帮助</button>
+    </div>
+    <script>
+        function submitText() {
+            var text = document.getElementById("text-editor").value;
+            var url = '/settime?data=' + encodeURIComponent(text);
+            window.location.href = url;
+            alert('提交成功');
+        }
+         document.getElementById('helpButton').addEventListener('click', function() {
+            window.location.href = '/help';
+        });
+    </script>
+</body>
+</html>
